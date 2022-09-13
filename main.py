@@ -34,12 +34,3 @@ for img, lab in zip(train_reshape, label):
     # 이미지 파일 생성
     cv2.imwrite('data/'+str(lab) + '_' + str(i)+'.jpg', img_sharp)	# 파일명 ex : 0_1.jpg
   i += 1
-
-
-
-batch_size = 128
-train_loader = DataLoader(fashion_mnist_train,
-                          batch_size=batch_size, shuffle=True)
-test_loader = DataLoader(fashion_mnist_train,
-
-                         batch_size=batch_size, shuffle=False)
