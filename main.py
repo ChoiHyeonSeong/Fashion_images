@@ -7,7 +7,8 @@ from torch.utils.data import (Dataset, DataLoader, TensorDataset)
 from torchvision.datasets import FashionMNIST
 from torchvision import transforms
 
-data = pd.read_csv('C:/Users/huns1/OneDrive/바탕 화면/Pycharm/Dataset/Image_1/train.csv')
+# data = pd.read_csv('C:/Users/huns1/OneDrive/바탕 화면/Pycharm/Dataset/Image_1/train.csv')
+data = pd.read_csv('C:/Users/Chs/Desktop/Fashion_images/data/train.csv')
 train = data.iloc[:,2:]
 label = data.iloc[:,1:2]
 
@@ -31,7 +32,7 @@ for img, lab in zip(train_reshape, label):
                       [0, -1, 0]])
     img_sharp = cv2.filter2D(img_resize, -1, kernel)
     # 이미지 파일 생성
-    cv2.imwrite('C:/Users/huns1/OneDrive/바탕 화면/Pycharm/Dataset/'+str(lab) + '_' + str(i)+'.jpg', img_sharp)	# 파일명 ex : 0_1.jpg
+    cv2.imwrite('data/'+str(lab) + '_' + str(i)+'.jpg', img_sharp)	# 파일명 ex : 0_1.jpg
   i += 1
 
 
