@@ -20,6 +20,7 @@ from torchvision import utils
 import matplotlib.pyplot as plt
 
 # utils
+from PIL import Image
 import numpy as np
 import time
 import copy
@@ -31,22 +32,28 @@ print(torch.cuda.is_available())
 ---------------------------------------------------------------------------------------------------------
 '''
 
-from PIL import Image
-
 trans = transforms.Compose([transforms.Resize((100,100)),
                             transforms.ToTensor(),
                             transforms.Normalize((0.5,0.5,0.5), (0.5,0.5,0.5))
                             ])
-trainset = torchvision.datasets.ImageFolder(root = "C:\\data\\images",
+trainset = torchvision.datasets.ImageFolder(root = "/Pycharm/data/cat_dog/train",
+                                            transform = trans)
+valset = torchvision.datasets.ImageFolder(root = "/Pycharm/data/cat_dog/val",
                                             transform = trans)
 
 print(trainset.__getitem__(18))
 print(len(trainset))
 print(trainset.classes)
+print(len(valset))
+print(valset.classes)
 
-trainloader = DataLoader(trainset, batch_size = 16, shuffle=False, num_workers=4)
+trainloader = DataLoader(trainset, batch_size = 20, shuffle=True)
+valloader = DataLoader(valset, batch_size = 5, shuffle=True)
 
 dataiter = iter(trainloader)
+images, labels = dataiter.next()
+print(len(labels))
+print(labels)
 
 def imshow(img):
     img = img/2+0.5
@@ -56,96 +63,101 @@ def imshow(img):
     print(np_img.shape)
     print((np.transpose(np_img,(1,2,0))).shape)
 
+print(images.shape)
+imshow(torchvision.utils.make_grid(images, nrows=4))
+
+
 
 '''
 ---------------------------------------------------------------------------------------------------------
 '''
-# specify the data path
-path2data = '/data'
 
-# if not exists the path, make the directory
-if not os.path.exists(path2data):
-    os.mkdir(path2data)
-
-# load dataset
-train_ds = datasets.STL10(path2data, split='train', download=True, transform=transforms.ToTensor())
-val_ds = datasets.STL10(path2data, split='test', download=True, transform=transforms.ToTensor())
-
-print(len(train_ds))
-print(len(val_ds))
-
-print(type(train_ds))
-
-# To normalize the dataset, calculate the mean and std
-train_meanRGB = [np.mean(x.numpy(), axis=(1,2)) for x, _ in train_ds]
-train_stdRGB = [np.std(x.numpy(), axis=(1,2)) for x, _ in train_ds]
-
-train_meanR = np.mean([m[0] for m in train_meanRGB])
-train_meanG = np.mean([m[1] for m in train_meanRGB])
-train_meanB = np.mean([m[2] for m in train_meanRGB])
-train_stdR = np.mean([s[0] for s in train_stdRGB])
-train_stdG = np.mean([s[1] for s in train_stdRGB])
-train_stdB = np.mean([s[2] for s in train_stdRGB])
-
-
-val_meanRGB = [np.mean(x.numpy(), axis=(1,2)) for x, _ in val_ds]
-val_stdRGB = [np.std(x.numpy(), axis=(1,2)) for x, _ in val_ds]
-
-val_meanR = np.mean([m[0] for m in val_meanRGB])
-val_meanG = np.mean([m[1] for m in val_meanRGB])
-val_meanB = np.mean([m[2] for m in val_meanRGB])
-
-val_stdR = np.mean([s[0] for s in val_stdRGB])
-val_stdG = np.mean([s[1] for s in val_stdRGB])
-val_stdB = np.mean([s[2] for s in val_stdRGB])
-
-print(train_meanR, train_meanG, train_meanB)
-print(val_meanR, val_meanG, val_meanB)
-
-# define the image transformation
-train_transformation = transforms.Compose([
-                        transforms.ToTensor(),
-                        transforms.Resize(224),
-                        transforms.Normalize([train_meanR, train_meanG, train_meanB],[train_stdR, train_stdG, train_stdB]),
-                        transforms.RandomHorizontalFlip(),
-])
-
-val_transformation = transforms.Compose([
-                        transforms.ToTensor(),
-                        transforms.Resize(224),
-                        transforms.Normalize([train_meanR, train_meanG, train_meanB],[train_stdR, train_stdG, train_stdB]),
-])
-
-# apply transforamtion
-train_ds.transform = train_transformation
-val_ds.transform = val_transformation
-
-# create DataLoader
-train_dl = DataLoader(train_ds, batch_size=32, shuffle=True)
-val_dl = DataLoader(val_ds, batch_size=32, shuffle=True)
-
-# display sample images
-def show(img, y=None, color=True):
-    npimg = img.numpy()
-    npimg_tr = np.transpose(npimg, (1,2,0))
-    plt.imshow(npimg_tr)
-
-    if y is not None:
-        plt.title('labels :' + str(y))
-
-np.random.seed(1)
-torch.manual_seed(1)
-
-grid_size = 4
-rnd_inds = np.random.randint(0, len(train_ds), grid_size)
-print('image indices:',rnd_inds)
-
-x_grid = [train_ds[i][0] for i in rnd_inds]
-y_grid = [train_ds[i][1] for i in rnd_inds]
-
-x_grid = utils.make_grid(x_grid, nrow=grid_size, padding=2)
-
-show(x_grid, y_grid)
+# # specify the data path
+# path2data = '/data'
+#
+# # if not exists the path, make the directory
+# if not os.path.exists(path2data):
+#     os.mkdir(path2data)
+#
+# # load dataset
+# train_ds = datasets.STL10(path2data, split='train', download=True, transform=transforms.ToTensor())
+# val_ds = datasets.STL10(path2data, split='test', download=True, transform=transforms.ToTensor())
+#
+# print(len(train_ds))
+# print(len(val_ds))
+#
+# print(type(train_ds))
+#
+# # To normalize the dataset, calculate the mean and std
+# train_meanRGB = [np.mean(x.numpy(), axis=(1,2)) for x, _ in train_ds]
+# train_stdRGB = [np.std(x.numpy(), axis=(1,2)) for x, _ in train_ds]
+#
+# train_meanR = np.mean([m[0] for m in train_meanRGB])
+# train_meanG = np.mean([m[1] for m in train_meanRGB])
+# train_meanB = np.mean([m[2] for m in train_meanRGB])
+# train_stdR = np.mean([s[0] for s in train_stdRGB])
+# train_stdG = np.mean([s[1] for s in train_stdRGB])
+# train_stdB = np.mean([s[2] for s in train_stdRGB])
+#
+#
+# val_meanRGB = [np.mean(x.numpy(), axis=(1,2)) for x, _ in val_ds]
+# val_stdRGB = [np.std(x.numpy(), axis=(1,2)) for x, _ in val_ds]
+#
+# val_meanR = np.mean([m[0] for m in val_meanRGB])
+# val_meanG = np.mean([m[1] for m in val_meanRGB])
+# val_meanB = np.mean([m[2] for m in val_meanRGB])
+#
+# val_stdR = np.mean([s[0] for s in val_stdRGB])
+# val_stdG = np.mean([s[1] for s in val_stdRGB])
+# val_stdB = np.mean([s[2] for s in val_stdRGB])
+#
+# print(train_meanR, train_meanG, train_meanB)
+# print(val_meanR, val_meanG, val_meanB)
+#
+# # define the image transformation
+# train_transformation = transforms.Compose([
+#                         transforms.ToTensor(),
+#                         transforms.Resize(224),
+#                         transforms.Normalize([train_meanR, train_meanG, train_meanB],[train_stdR, train_stdG, train_stdB]),
+#                         transforms.RandomHorizontalFlip(),
+# ])
+#
+# val_transformation = transforms.Compose([
+#                         transforms.ToTensor(),
+#                         transforms.Resize(224),
+#                         transforms.Normalize([train_meanR, train_meanG, train_meanB],[train_stdR, train_stdG, train_stdB]),
+# ])
+#
+# # apply transforamtion
+# train_ds.transform = train_transformation
+# val_ds.transform = val_transformation
+#
+# # create DataLoader
+# train_dl = DataLoader(train_ds, batch_size=32, shuffle=True)
+# val_dl = DataLoader(val_ds, batch_size=32, shuffle=True)
+#
+# # display sample images
+# def show(img, y=None, color=True):
+#     npimg = img.numpy()
+#     npimg_tr = np.transpose(npimg, (1,2,0))
+#     plt.imshow(npimg_tr)
+#
+#     if y is not None:
+#         plt.title('labels :' + str(y))
+#
+# np.random.seed(1)
+# torch.manual_seed(1)
+#
+# grid_size = 4
+# rnd_inds = np.random.randint(0, len(train_ds), grid_size)
+# print('image indices:',rnd_inds)
+#
+# x_grid = [train_ds[i][0] for i in rnd_inds]
+# y_grid = [train_ds[i][1] for i in rnd_inds]
+#
+# x_grid = utils.make_grid(x_grid, nrow=grid_size, padding=2)
+#
+# show(x_grid, y_grid)
 
 '''
 ---------------------------------------------------------------------------------------------------------
@@ -414,8 +426,8 @@ params_train = {
     'num_epochs':20,
     'optimizer':opt,
     'loss_func':loss_func,
-    'train_dl':train_dl,
-    'val_dl':val_dl,
+    'train_dl':trainloader,
+    'val_dl':valloader,
     'sanity_check':False,
     'lr_scheduler':lr_scheduler,
     'path2weights':'./models/weights.pt',
@@ -451,3 +463,37 @@ plt.ylabel("Accuracy")
 plt.xlabel("Training Epochs")
 plt.legend()
 plt.show()
+
+'''
+---------------------------------------------------------------------------------------------------------
+'''
+
+class_names = trainset.classes
+
+def visualize_model(model, num_images=6):
+    was_training = model.training
+    model.eval()
+    images_so_far = 0
+    fig = plt.figure()
+
+    with torch.no_grad():
+        for i, (inputs, labels) in enumerate(valloader):
+            inputs = inputs.to(device)
+            labels = labels.to(device)
+
+            outputs = model(inputs)
+            _, preds = torch.max(outputs, 1)
+
+            for j in range(inputs.size()[0]):
+                images_so_far += 1
+                ax = plt.subplot(num_images//2, 2, images_so_far)
+                ax.axis('off')
+                ax.set_title('predicted: {}'.format(class_names[preds[j]]))
+                imshow(inputs.cpu().data[j])
+
+                if images_so_far == num_images:
+                    model.train(mode=was_training)
+                    return
+        model.train(mode=was_training)
+
+visualize_model(model)
