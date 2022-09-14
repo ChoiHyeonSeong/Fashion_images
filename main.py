@@ -31,14 +31,5 @@ for img, lab in zip(train_reshape, label):
                       [0, -1, 0]])
     img_sharp = cv2.filter2D(img_resize, -1, kernel)
     # 이미지 파일 생성
-    cv2.imwrite('C:/Users/huns1/OneDrive/바탕 화면/Pycharm/Dataset/'+str(lab) + '_' + str(i)+'.jpg', img_sharp)	# 파일명 ex : 0_1.jpg
+    cv2.imwrite('/data/'+str(lab) + '_' + str(i)+'.jpg', img_sharp)	# 파일명 ex : 0_1.jpg
   i += 1
-
-
-
-batch_size = 128
-train_loader = DataLoader(fashion_mnist_train,
-                          batch_size=batch_size, shuffle=True)
-test_loader = DataLoader(fashion_mnist_train,
-
-                         batch_size=batch_size, shuffle=False)
