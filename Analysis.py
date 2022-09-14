@@ -9,6 +9,7 @@ from torch.optim.lr_scheduler import StepLR
 from torchsummary import summary
 
 # dataset and transformation
+import torchvision
 from torchvision import datasets
 import torchvision.transforms as transforms
 from torch.utils.data import DataLoader
@@ -30,6 +31,35 @@ print(torch.cuda.is_available())
 ---------------------------------------------------------------------------------------------------------
 '''
 
+from PIL import Image
+
+trans = transforms.Compose([transforms.Resize((100,100)),
+                            transforms.ToTensor(),
+                            transforms.Normalize((0.5,0.5,0.5), (0.5,0.5,0.5))
+                            ])
+trainset = torchvision.datasets.ImageFolder(root = "C:\\data\\images",
+                                            transform = trans)
+
+print(trainset.__getitem__(18))
+print(len(trainset))
+print(trainset.classes)
+
+trainloader = DataLoader(trainset, batch_size = 16, shuffle=False, num_workers=4)
+
+dataiter = iter(trainloader)
+
+def imshow(img):
+    img = img/2+0.5
+    np_img = img.numpy()
+    plt.imshow(np.transpose(np_img, (1,2,0)))
+
+    print(np_img.shape)
+    print((np.transpose(np_img,(1,2,0))).shape)
+
+
+'''
+---------------------------------------------------------------------------------------------------------
+'''
 # specify the data path
 path2data = '/data'
 
