@@ -20,6 +20,7 @@ from torchvision import utils
 import matplotlib.pyplot as plt
 
 # utils
+import PIL
 from PIL import Image
 import numpy as np
 import time
@@ -497,3 +498,11 @@ def visualize_model(model, num_images=6):
         model.train(mode=was_training)
 
 visualize_model(model)
+
+'''
+---------------------------------------------------------------------------------------------------------
+'''
+# img_path = "/Pycharm/data/cat_dog/check/"
+#
+# check_img = PIL.Image.open(img_path + 'check (1).jpg')
+# t_check_img = trans(check_img)
